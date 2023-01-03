@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	leaksDbFilePathEnvKey = "leaksdb.fp"
+	leaksDbFilePathEnvKey = "leaksdb_fp"
 )
 
 var (
