@@ -1,11 +1,12 @@
 package http
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/palavrapasse/query/internal/data"
+	"github.com/palavrapasse/query/internal/logging"
 )
 
 func RegisterHandlers(e *echo.Echo) {
@@ -18,6 +19,8 @@ func RegisterHandlers(e *echo.Echo) {
 func QueryLeaks(ectx echo.Context) error {
 	var affu []data.AffectedUserLeak
 	var err error
+
+	logging.Aspirador.Trace("Querying leaks")
 
 	mwctx, gmerr := GetMiddlewareContext(ectx)
 
@@ -34,11 +37,13 @@ func QueryLeaks(ectx echo.Context) error {
 		affu, err = data.QueryLeaksDB(mwctx.DB, hus)
 
 		if err != nil {
-			log.Printf("wtf happened: %v\n", err)
+			logging.Aspirador.Error(fmt.Sprintf("Error while querying Leaks from DB: %s", err))
 
 			return InternalServerError(ectx)
 		}
 	}
+
+	logging.Aspirador.Trace(fmt.Sprintf("Success in querying leaks. Found %d leaks", len(affu)))
 
 	return Ok(ectx, ToQueryAffectedUserLeaksView(affu))
 }
