@@ -28,8 +28,6 @@ func GetMiddlewareContext(ectx echo.Context) (MiddlewareContext, error) {
 
 	if !dok {
 		err = errors.New("DB not available in middleware")
-
-		logging.Aspirador.Error(err.Error())
 	}
 
 	return MiddlewareContext{

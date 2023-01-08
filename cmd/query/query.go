@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	as "github.com/palavrapasse/aspirador/pkg"
 	"github.com/palavrapasse/query/internal/data"
@@ -23,8 +25,7 @@ func main() {
 	if oerr != nil {
 
 		logging.Aspirador.Warning("Could not open DB connection on server start")
-		logging.Aspirador.Error(oerr.Error())
-		logging.Aspirador.Error("DB connection is required to operate query")
+		logging.Aspirador.Error(fmt.Sprintf("Could not open DB connection on server start %v", oerr.Error()))
 
 		return
 	}
