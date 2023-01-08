@@ -244,18 +244,6 @@ linters-settings:
   #   # Default: ["*"]
   #   checks: ["all"]
 
-  tagliatelle:
-    # Check the struct tag name case.
-    case:
-      # Use the struct field name to check the name of the struct tag.
-      # Default: false
-      use-field-name: true
-      rules:
-        # Any struct tag type can be used.
-        # Support string case: `camel`, `pascal`, `kebab`, `snake`, `goCamel`, `goPascal`, `goKebab`, `goSnake`, `upper`, `lower`
-        json: camel
-        yaml: camel
-
   decorder:
     # Required order of `type`, `const`, `var` and `func` declarations inside a file.
     # Default: types before constants before variables before functions.
