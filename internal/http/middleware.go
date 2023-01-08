@@ -3,10 +3,10 @@ package http
 import (
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/labstack/echo/v4"
 	"github.com/palavrapasse/damn/pkg/database"
+	"github.com/palavrapasse/query/internal/logging"
 )
 
 const (
@@ -28,8 +28,6 @@ func GetMiddlewareContext(ectx echo.Context) (MiddlewareContext, error) {
 
 	if !dok {
 		err = errors.New("DB not available in middleware")
-
-		log.Printf("%v\n", err)
 	}
 
 	return MiddlewareContext{
@@ -53,8 +51,7 @@ func loggingMiddleware() echo.MiddlewareFunc {
 
 			req := ectx.Request()
 
-			// todo (#10)
-			log.Printf(fmt.Sprintf("Host: %s | Method: %s | Path: %s", req.Host, req.Method, req.URL.RequestURI()))
+			logging.Aspirador.Info(fmt.Sprintf("Host: %s | Method: %s | Path: %s", req.Host, req.Method, req.URL.RequestURI()))
 
 			return next(ectx)
 		}
