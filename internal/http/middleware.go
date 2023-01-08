@@ -14,16 +14,16 @@ const (
 )
 
 type MiddlewareContext struct {
-	DB database.DatabaseContext
+	DB database.DatabaseContext[database.Record]
 }
 
-func RegisterMiddlewares(e *echo.Echo, dbctx database.DatabaseContext) {
+func RegisterMiddlewares(e *echo.Echo, dbctx database.DatabaseContext[database.Record]) {
 	e.Use(dbAccessMiddleware(dbctx))
 	e.Use(loggingMiddleware())
 }
 
 func GetMiddlewareContext(ectx echo.Context) (MiddlewareContext, error) {
-	db, dok := ectx.Get(dbMiddlewareKey).(database.DatabaseContext)
+	db, dok := ectx.Get(dbMiddlewareKey).(database.DatabaseContext[database.Record])
 	var err error
 
 	if !dok {
@@ -37,7 +37,7 @@ func GetMiddlewareContext(ectx echo.Context) (MiddlewareContext, error) {
 	}, err
 }
 
-func dbAccessMiddleware(dbctx database.DatabaseContext) echo.MiddlewareFunc {
+func dbAccessMiddleware(dbctx database.DatabaseContext[database.Record]) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ectx echo.Context) error {
 			ectx.Set(dbMiddlewareKey, dbctx)

@@ -14,10 +14,10 @@ var (
 	leaksDbFilePath = os.Getenv(leaksDbFilePathEnvKey)
 )
 
-func Open() (database.DatabaseContext, error) {
-	return database.NewDatabaseContext(leaksDbFilePath)
+func Open() (database.DatabaseContext[database.Record], error) {
+	return database.NewDatabaseContext[database.Record](leaksDbFilePath)
 }
 
-func Close(dbctx database.DatabaseContext) error {
+func Close(dbctx database.DatabaseContext[database.Record]) error {
 	return dbctx.DB.Close()
 }
