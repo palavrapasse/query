@@ -16,6 +16,8 @@ func RegisterHandlers(e *echo.Echo) {
 }
 
 func QueryLeaks(ectx echo.Context) error {
+	var affu []data.AffectedUserLeak
+	var err error
 
 	mwctx, gmerr := GetMiddlewareContext(ectx)
 
@@ -25,17 +27,20 @@ func QueryLeaks(ectx echo.Context) error {
 
 	affp := ectx.QueryParam(affectedQueryParam)
 	aff := ParseAffected(affp)
-	hus := AffectedToHashUser(aff)
 
-	ls, err := data.QueryLeaksDB(mwctx.DB, hus)
+	if len(aff) > 0 {
+		hus := AffectedToHashUser(aff)
 
-	if err != nil {
-		log.Printf("wtf happened: %v\n", err)
+		affu, err = data.QueryLeaksDB(mwctx.DB, hus)
 
-		return InternalServerError(ectx)
+		if err != nil {
+			log.Printf("wtf happened: %v\n", err)
+
+			return InternalServerError(ectx)
+		}
 	}
 
-	return Ok(ectx, ToQueryLeaksView(ls))
+	return Ok(ectx, ToQueryAffectedUserLeaksView(affu))
 }
 
 func useNotFoundHandler() func(c echo.Context) error {

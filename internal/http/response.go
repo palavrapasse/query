@@ -4,33 +4,41 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/palavrapasse/damn/pkg/entity"
+	"github.com/palavrapasse/query/internal/data"
 )
 
 // Tooled with json-go-struct mapper: https://mholt.github.io/json-to-go/
 
-type QueryLeaksView []LeakView
+type QueryAffectedUserLeaksView []AffectedUserLeakView
 
 type LeakView struct {
 	Context          string `json:"context"`
 	ShareDateMSEpoch int64  `json:"shareDateMSEpoch"`
 }
 
-func ToQueryLeaksView(ls []entity.Leak) QueryLeaksView {
-	lls := len(ls)
-	qlv := make(QueryLeaksView, lls)
+type AffectedUserLeakView struct {
+	LeakView
+	Email string `json:"email"`
+}
+
+func ToQueryAffectedUserLeaksView(auls []data.AffectedUserLeak) QueryAffectedUserLeaksView {
+	lls := len(auls)
+	qlv := make(QueryAffectedUserLeaksView, lls)
 
 	for i := 0; i < lls; i++ {
-		qlv[i] = ToLeakView(ls[i])
+		qlv[i] = ToAffectedUserLeakView(auls[i])
 	}
 
 	return qlv
 }
 
-func ToLeakView(l entity.Leak) LeakView {
-	return LeakView{
-		Context:          string(l.Context),
-		ShareDateMSEpoch: int64(l.ShareDateSC) * 1000,
+func ToAffectedUserLeakView(aul data.AffectedUserLeak) AffectedUserLeakView {
+	return AffectedUserLeakView{
+		LeakView: LeakView{
+			Context:          string(aul.Context),
+			ShareDateMSEpoch: int64(aul.ShareDateSC) * 1000,
+		},
+		Email: string(aul.Email),
 	}
 }
 
