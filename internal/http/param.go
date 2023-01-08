@@ -6,6 +6,8 @@ import (
 	"github.com/palavrapasse/damn/pkg/entity"
 )
 
+const affectedSeparator = ","
+
 const (
 	leakTypeQueryParam = "type"
 	affectedQueryParam = "affected"
@@ -27,8 +29,44 @@ const (
 type LeakType string
 type Target string
 
+func ParseLeakType(s string) LeakType {
+	lt := LeakType(s)
+
+	switch lt {
+	case EmailLeakType:
+	case PasswordLeakType:
+	default:
+		lt = UnknownLeakType
+	}
+
+	return lt
+}
+
+func ParseTarget(s string) Target {
+	t := Target(s)
+
+	switch t {
+	case AllTarget:
+	case NewestTarget:
+	case OldestTarget:
+	default:
+		t = AllTarget
+	}
+
+	return t
+}
+
 func ParseAffected(s string) []string {
-	return strings.Split(strings.ReplaceAll(s, " ", ""), ",")
+	aff := strings.Split(strings.ReplaceAll(s, " ", ""), affectedSeparator)
+	laff := len(aff)
+
+	if aff[0] == "" {
+		aff = []string{}
+	} else if aff[laff-1] == "" {
+		aff = aff[:laff-1]
+	}
+
+	return aff
 }
 
 func AffectedToHashUser(aff []string) []entity.HashUser {
