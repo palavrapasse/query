@@ -41,8 +41,8 @@ func dbAccessMiddleware(dbctx database.DatabaseContext[database.Record]) echo.Mi
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ectx echo.Context) error {
 			ectx.Set(dbMiddlewareKey, dbctx)
-			next(ectx)
-			return nil
+
+			return next(ectx)
 		}
 	}
 }
@@ -53,11 +53,10 @@ func loggingMiddleware() echo.MiddlewareFunc {
 
 			req := ectx.Request()
 
+			// todo (#10)
 			log.Printf(fmt.Sprintf("Host: %s | Method: %s | Path: %s", req.Host, req.Method, req.URL.RequestURI()))
 
-			next(ectx)
-
-			return nil
+			return next(ectx)
 		}
 	}
 }

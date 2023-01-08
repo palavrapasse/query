@@ -19,7 +19,7 @@ func main() {
 	if oerr != nil {
 
 		log.Printf("Could not open DB connection on server start")
-		log.Printf(oerr.Error())
+		// todo (#10): log.Printf(oerr.Error())
 
 		panic("DB connection is required to operate query")
 	}
