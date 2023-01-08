@@ -21,9 +21,9 @@ AND L.leakid IN (
 `
 
 var leaksByUserQueryMapper = func() (*AffectedUserLeak, []any) {
-	a := AffectedUserLeak{}
+	aul := AffectedUserLeak{}
 
-	return &a, []any{&a.LeakId, &a.ShareDateSC, &a.Context, &a.Email}
+	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context, &aul.Email}
 }
 
 type AffectedUserLeak struct {
