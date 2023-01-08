@@ -20,16 +20,15 @@ AND L.leakid IN (
 )
 `
 
-// not sure if it's the best name
-type AffectedUserLeak struct {
-	entity.Leak
-	entity.User
-}
-
 var leaksByUserQueryMapper = func() (*AffectedUserLeak, []any) {
 	a := AffectedUserLeak{}
 
 	return &a, []any{&a.LeakId, &a.ShareDateSC, &a.Context, &a.Email}
+}
+
+type AffectedUserLeak struct {
+	entity.User
+	entity.Leak
 }
 
 func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], hus []entity.HashUser) ([]AffectedUserLeak, error) {

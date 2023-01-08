@@ -17,8 +17,8 @@ type LeakView struct {
 }
 
 type AffectedUserLeakView struct {
-	LeakView
 	Email string `json:"email"`
+	LeakView
 }
 
 func ToQueryAffectedUserLeaksView(auls []data.AffectedUserLeak) QueryAffectedUserLeaksView {
