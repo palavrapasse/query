@@ -2,7 +2,6 @@ package data
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/palavrapasse/damn/pkg/database"
 	"github.com/palavrapasse/damn/pkg/entity"
@@ -42,13 +41,11 @@ func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], hus []entity.
 func prepareAffectedUserQuery(hus []entity.HashUser) (string, []any) {
 	lhus := len(hus)
 
-	placeholders := make([]string, lhus)
 	values := make([]any, lhus)
 
 	for i := 0; i < lhus; i++ {
-		placeholders[i] = "?"
 		values[i] = hus[i].HSHA256
 	}
 
-	return fmt.Sprintf(leaksByUserHashPreparedQuery, strings.Join(placeholders, ", ")), values
+	return fmt.Sprintf(leaksByUserHashPreparedQuery, database.MultiplePlaceholder(lhus)), values
 }
