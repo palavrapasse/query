@@ -29,18 +29,18 @@ func QueryLeaks(ectx echo.Context) error {
 	}
 
 	affp := ectx.QueryParam(affectedQueryParam)
-	aff := ParseAffected(affp)
+	ttp := ectx.QueryParam(targetQueryParam)
 
-	if len(aff) > 0 {
-		hus := AffectedToHashUser(aff)
+	aff := data.ParseAffected(affp)
+	tt := data.ParseTarget(ttp)
+	hus := data.AffectedToHashUser(aff)
 
-		affu, err = data.QueryLeaksDB(mwctx.DB, hus)
+	affu, err = data.QueryLeaksDB(mwctx.DB, tt, hus...)
 
-		if err != nil {
-			logging.Aspirador.Error(fmt.Sprintf("Error while querying Leaks from DB: %s", err))
+	if err != nil {
+		logging.Aspirador.Error(fmt.Sprintf("Error while querying Leaks from DB: %s", err))
 
-			return InternalServerError(ectx)
-		}
+		return InternalServerError(ectx)
 	}
 
 	logging.Aspirador.Trace(fmt.Sprintf("Success in querying leaks. Found %d leaks", len(affu)))
