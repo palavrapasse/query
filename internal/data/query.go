@@ -19,26 +19,43 @@ AND L.leakid IN (
 )
 `
 
-var leaksByUserQueryMapper = func() (*AffectedUserLeak, []any) {
-	aul := AffectedUserLeak{}
+const leaksQuery = `SELECT * FROM Leak`
+
+var leaksByUserQueryMapper = func() (*QueryLeaksResult, []any) {
+	aul := QueryLeaksResult{}
 
 	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context, &aul.Email}
 }
 
-type AffectedUserLeak struct {
-	entity.User
-	entity.Leak
+var leaksQueryMapper = func() (*QueryLeaksResult, []any) {
+	aul := QueryLeaksResult{}
+
+	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context}
 }
 
-func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], hus []entity.HashUser) ([]AffectedUserLeak, error) {
-	q, vs := prepareAffectedUserQuery(hus)
+func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hus ...entity.HashUser) ([]QueryLeaksResult, error) {
+	ctx := database.Convert[database.Record, QueryLeaksResult](dbctx)
 
-	ctx := database.Convert[database.Record, AffectedUserLeak](dbctx)
+	if len(hus) > 0 {
+		return queryLeaksThatAffectUser(ctx, hus)
+	}
 
-	return ctx.CustomQuery(q, leaksByUserQueryMapper, vs...)
+	return queryLeaks(ctx, tt)
 }
 
-func prepareAffectedUserQuery(hus []entity.HashUser) (string, []any) {
+func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], hus []entity.HashUser) ([]QueryLeaksResult, error) {
+	q, m, vs := prepareAffectedUserQuery(hus)
+
+	return dbctx.CustomQuery(q, m, vs...)
+}
+
+func queryLeaks(dbctx database.DatabaseContext[QueryLeaksResult], tt Target) ([]QueryLeaksResult, error) {
+	q, m, vs := prepareLeaksQuery(tt)
+
+	return dbctx.CustomQuery(q, m, vs...)
+}
+
+func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
 	lhus := len(hus)
 
 	values := make([]any, lhus)
@@ -47,5 +64,9 @@ func prepareAffectedUserQuery(hus []entity.HashUser) (string, []any) {
 		values[i] = hus[i].HSHA256
 	}
 
-	return fmt.Sprintf(leaksByUserHashPreparedQuery, database.MultiplePlaceholder(lhus)), values
+	return fmt.Sprintf(leaksByUserHashPreparedQuery, database.MultiplePlaceholder(lhus)), leaksByUserQueryMapper, values
+}
+
+func prepareLeaksQuery(tt Target) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
+	return leaksQuery, leaksQueryMapper, []any{}
 }
