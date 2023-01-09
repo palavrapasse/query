@@ -3,6 +3,7 @@ module github.com/palavrapasse/query
 go 1.19
 
 require (
+	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/palavrapasse/aspirador v0.0.1
 	github.com/palavrapasse/damn v0.0.3

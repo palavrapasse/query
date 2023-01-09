@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo/v4"
 	as "github.com/palavrapasse/aspirador/pkg"
 	"github.com/palavrapasse/query/internal/data"
