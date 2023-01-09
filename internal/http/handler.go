@@ -17,6 +17,8 @@ func RegisterHandlers(e *echo.Echo) {
 }
 
 func QueryLeaks(ectx echo.Context) error {
+	var affu []data.AffectedUserLeak
+	var err error
 
 	logging.Aspirador.Trace("Querying leaks")
 
@@ -28,18 +30,22 @@ func QueryLeaks(ectx echo.Context) error {
 
 	affp := ectx.QueryParam(affectedQueryParam)
 	aff := ParseAffected(affp)
-	hus := AffectedToHashUser(aff)
 
-	ls, err := data.QueryLeaksDB(mwctx.DB, hus)
+	if len(aff) > 0 {
+		hus := AffectedToHashUser(aff)
 
-	if err != nil {
-		logging.Aspirador.Error(fmt.Sprintf("Error while querying Leaks from DB: %s", err))
+		affu, err = data.QueryLeaksDB(mwctx.DB, hus)
 
-		return InternalServerError(ectx)
+		if err != nil {
+			logging.Aspirador.Error(fmt.Sprintf("Error while querying Leaks from DB: %s", err))
+
+			return InternalServerError(ectx)
+		}
 	}
 
-	logging.Aspirador.Trace(fmt.Sprintf("Success in querying leaks. Found %d leaks", len(ls)))
-	return Ok(ectx, ToQueryLeaksView(ls))
+	logging.Aspirador.Trace(fmt.Sprintf("Success in querying leaks. Found %d leaks", len(affu)))
+
+	return Ok(ectx, ToQueryAffectedUserLeaksView(affu))
 }
 
 func useNotFoundHandler() func(c echo.Context) error {

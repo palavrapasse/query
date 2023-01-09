@@ -1,27 +1,51 @@
 package data
 
 import (
+	"fmt"
+
 	"github.com/palavrapasse/damn/pkg/database"
 	"github.com/palavrapasse/damn/pkg/entity"
 )
 
 const leaksByUserHashPreparedQuery = `
-SELECT * FROM Leak L
-WHERE L.leakid IN (
+SELECT L.*, U.email FROM Leak L, User U
+WHERE U.userid IN (
+	SELECT HU.userid FROM HashUser HU
+	WHERE HU.hsha256 IN (%s)
+)
+AND L.leakid IN (
 	SELECT AU.leakid FROM AffectedUsers AU
-	WHERE AU.userid = (
-		SELECT HU.userid FROM HashUser HU
-		WHERE HU.hsha256 = ?
-	)
-)`
+	WHERE AU.userid = U.userid
+)
+`
 
-var leaksQueryMapper = func() (*entity.Leak, []any) {
-	l := entity.Leak{}
-	return &l, []any{&l.LeakId, &l.ShareDateSC, &l.Context}
+var leaksByUserQueryMapper = func() (*AffectedUserLeak, []any) {
+	aul := AffectedUserLeak{}
+
+	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context, &aul.Email}
 }
 
-func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], hu []entity.HashUser) ([]entity.Leak, error) {
-	ctx := database.Convert[database.Record, entity.Leak](dbctx)
+type AffectedUserLeak struct {
+	entity.User
+	entity.Leak
+}
 
-	return ctx.CustomQuery(leaksByUserHashPreparedQuery, leaksQueryMapper, hu[0].HSHA256)
+func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], hus []entity.HashUser) ([]AffectedUserLeak, error) {
+	q, vs := prepareAffectedUserQuery(hus)
+
+	ctx := database.Convert[database.Record, AffectedUserLeak](dbctx)
+
+	return ctx.CustomQuery(q, leaksByUserQueryMapper, vs...)
+}
+
+func prepareAffectedUserQuery(hus []entity.HashUser) (string, []any) {
+	lhus := len(hus)
+
+	values := make([]any, lhus)
+
+	for i := 0; i < lhus; i++ {
+		values[i] = hus[i].HSHA256
+	}
+
+	return fmt.Sprintf(leaksByUserHashPreparedQuery, database.MultiplePlaceholder(lhus)), values
 }
