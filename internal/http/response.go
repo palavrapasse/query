@@ -21,7 +21,7 @@ type AffectedUserLeakView struct {
 	LeakView
 }
 
-func ToQueryAffectedUserLeaksView(auls []data.AffectedUserLeak) QueryAffectedUserLeaksView {
+func ToQueryAffectedUserLeaksView(auls []data.QueryLeaksResult) QueryAffectedUserLeaksView {
 	lls := len(auls)
 	qlv := make(QueryAffectedUserLeaksView, lls)
 
@@ -32,7 +32,7 @@ func ToQueryAffectedUserLeaksView(auls []data.AffectedUserLeak) QueryAffectedUse
 	return qlv
 }
 
-func ToAffectedUserLeakView(aul data.AffectedUserLeak) AffectedUserLeakView {
+func ToAffectedUserLeakView(aul data.QueryLeaksResult) AffectedUserLeakView {
 	return AffectedUserLeakView{
 		LeakView: LeakView{
 			Context:          string(aul.Context),

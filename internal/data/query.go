@@ -21,25 +21,20 @@ AND L.leakid IN (
 
 const leaksQuery = `SELECT * FROM Leak`
 
-var leaksByUserQueryMapper = func() (*AffectedUserLeak, []any) {
-	aul := AffectedUserLeak{}
+var leaksByUserQueryMapper = func() (*QueryLeaksResult, []any) {
+	aul := QueryLeaksResult{}
 
 	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context, &aul.Email}
 }
 
-var leaksQueryMapper = func() (*AffectedUserLeak, []any) {
-	aul := AffectedUserLeak{}
+var leaksQueryMapper = func() (*QueryLeaksResult, []any) {
+	aul := QueryLeaksResult{}
 
 	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context}
 }
 
-type AffectedUserLeak struct {
-	entity.User
-	entity.Leak
-}
-
-func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hus ...entity.HashUser) ([]AffectedUserLeak, error) {
-	ctx := database.Convert[database.Record, AffectedUserLeak](dbctx)
+func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hus ...entity.HashUser) ([]QueryLeaksResult, error) {
+	ctx := database.Convert[database.Record, QueryLeaksResult](dbctx)
 
 	if len(hus) > 0 {
 		return queryLeaksThatAffectUser(ctx, hus)
@@ -48,19 +43,19 @@ func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hu
 	}
 }
 
-func queryLeaksThatAffectUser(dbctx database.DatabaseContext[AffectedUserLeak], hus []entity.HashUser) ([]AffectedUserLeak, error) {
+func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], hus []entity.HashUser) ([]QueryLeaksResult, error) {
 	q, m, vs := prepareAffectedUserQuery(hus)
 
 	return dbctx.CustomQuery(q, m, vs...)
 }
 
-func queryLeaks(dbctx database.DatabaseContext[AffectedUserLeak], tt Target) ([]AffectedUserLeak, error) {
+func queryLeaks(dbctx database.DatabaseContext[QueryLeaksResult], tt Target) ([]QueryLeaksResult, error) {
 	q, m, vs := prepareLeaksQuery(tt)
 
 	return dbctx.CustomQuery(q, m, vs...)
 }
 
-func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQueryResultMapper[AffectedUserLeak], []any) {
+func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
 	lhus := len(hus)
 
 	values := make([]any, lhus)
@@ -72,6 +67,6 @@ func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQuer
 	return fmt.Sprintf(leaksByUserHashPreparedQuery, database.MultiplePlaceholder(lhus)), leaksByUserQueryMapper, values
 }
 
-func prepareLeaksQuery(tt Target) (string, database.TypedQueryResultMapper[AffectedUserLeak], []any) {
+func prepareLeaksQuery(tt Target) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
 	return leaksQuery, leaksQueryMapper, []any{}
 }

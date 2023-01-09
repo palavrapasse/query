@@ -23,6 +23,11 @@ const (
 type LeakType string
 type Target string
 
+type QueryLeaksResult struct {
+	entity.User
+	entity.Leak
+}
+
 func ParseLeakType(s string) LeakType {
 	lt := LeakType(s)
 

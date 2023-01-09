@@ -17,7 +17,7 @@ func RegisterHandlers(e *echo.Echo) {
 }
 
 func QueryLeaks(ectx echo.Context) error {
-	var affu []data.AffectedUserLeak
+	var affu []data.QueryLeaksResult
 	var err error
 
 	logging.Aspirador.Trace("Querying leaks")
