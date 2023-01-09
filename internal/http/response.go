@@ -21,8 +21,8 @@ type AffectedUserView struct {
 }
 
 type QueryLeaksResultView struct {
-	LeakView
 	AffectedUserView
+	LeakView
 }
 
 func ToQueryLeaksView(auls []data.QueryLeaksResult) QueryLeaksView {

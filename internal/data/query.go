@@ -38,9 +38,9 @@ func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hu
 
 	if len(hus) > 0 {
 		return queryLeaksThatAffectUser(ctx, hus)
-	} else {
-		return queryLeaks(ctx, tt)
 	}
+
+	return queryLeaks(ctx, tt)
 }
 
 func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], hus []entity.HashUser) ([]QueryLeaksResult, error) {
