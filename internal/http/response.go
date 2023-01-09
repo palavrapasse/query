@@ -9,36 +9,42 @@ import (
 
 // Tooled with json-go-struct mapper: https://mholt.github.io/json-to-go/
 
-type QueryAffectedUserLeaksView []AffectedUserLeakView
+type QueryLeaksView []QueryLeaksResultView
 
 type LeakView struct {
 	Context          string `json:"context"`
 	ShareDateMSEpoch int64  `json:"shareDateMSEpoch"`
 }
 
-type AffectedUserLeakView struct {
-	Email string `json:"email"`
-	LeakView
+type AffectedUserView struct {
+	Email string `json:"email,omitempty"`
 }
 
-func ToQueryAffectedUserLeaksView(auls []data.QueryLeaksResult) QueryAffectedUserLeaksView {
+type QueryLeaksResultView struct {
+	LeakView
+	AffectedUserView
+}
+
+func ToQueryLeaksView(auls []data.QueryLeaksResult) QueryLeaksView {
 	lls := len(auls)
-	qlv := make(QueryAffectedUserLeaksView, lls)
+	qlv := make(QueryLeaksView, lls)
 
 	for i := 0; i < lls; i++ {
-		qlv[i] = ToAffectedUserLeakView(auls[i])
+		qlv[i] = ToQueryLeaksResultView(auls[i])
 	}
 
 	return qlv
 }
 
-func ToAffectedUserLeakView(aul data.QueryLeaksResult) AffectedUserLeakView {
-	return AffectedUserLeakView{
+func ToQueryLeaksResultView(aul data.QueryLeaksResult) QueryLeaksResultView {
+	return QueryLeaksResultView{
 		LeakView: LeakView{
 			Context:          string(aul.Context),
 			ShareDateMSEpoch: int64(aul.ShareDateSC) * 1000,
 		},
-		Email: string(aul.Email),
+		AffectedUserView: AffectedUserView{
+			Email: string(aul.Email),
+		},
 	}
 }
 

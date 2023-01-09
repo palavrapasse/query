@@ -45,7 +45,7 @@ func QueryLeaks(ectx echo.Context) error {
 
 	logging.Aspirador.Trace(fmt.Sprintf("Success in querying leaks. Found %d leaks", len(affu)))
 
-	return Ok(ectx, ToQueryAffectedUserLeaksView(affu))
+	return Ok(ectx, ToQueryLeaksView(affu))
 }
 
 func useNotFoundHandler() func(c echo.Context) error {
