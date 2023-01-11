@@ -19,7 +19,10 @@ AND L.leakid IN (
 )
 `
 
-const leaksQuery = `SELECT * FROM Leak`
+const leaksQuery = `
+SELECT L.* FROM Leak L
+ORDER BY L.sharedatesc %s
+`
 
 var leaksByUserQueryMapper = func() (*QueryLeaksResult, []any) {
 	aul := QueryLeaksResult{}
@@ -68,5 +71,5 @@ func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQuer
 }
 
 func prepareLeaksQuery(tt Target) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
-	return leaksQuery, leaksQueryMapper, []any{}
+	return fmt.Sprintf(leaksQuery, tt.ToSQLKeyword()), leaksQueryMapper, []any{}
 }
