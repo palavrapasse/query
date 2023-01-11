@@ -29,6 +29,10 @@ type QueryLeaksResult struct {
 	entity.Leak
 }
 
+type QueryPlatformsResult struct {
+	entity.Platform
+}
+
 func ParseLeakType(s string) LeakType {
 	lt := LeakType(s)
 
