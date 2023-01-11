@@ -3,6 +3,7 @@ package data
 import (
 	"strings"
 
+	"github.com/palavrapasse/damn/pkg/database"
 	"github.com/palavrapasse/damn/pkg/entity"
 )
 
@@ -77,4 +78,12 @@ func AffectedToHashUser(aff []string) []entity.HashUser {
 	}
 
 	return hus
+}
+
+func (t Target) ToSQLKeyword() string {
+	if t == OldestTarget {
+		return database.AscendingSortOrderKeyword
+	}
+
+	return database.DescendingSortOrderKeyword
 }
