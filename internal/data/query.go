@@ -24,6 +24,8 @@ SELECT L.* FROM Leak L
 ORDER BY L.sharedatesc %s
 `
 
+const platformsQuery = `SELECT * FROM Platform`
+
 var leaksByUserQueryMapper = func() (*QueryLeaksResult, []any) {
 	aul := QueryLeaksResult{}
 
@@ -36,6 +38,12 @@ var leaksQueryMapper = func() (*QueryLeaksResult, []any) {
 	return &aul, []any{&aul.LeakId, &aul.ShareDateSC, &aul.Context}
 }
 
+var platformsQueryMapper = func() (*QueryPlatformsResult, []any) {
+	qpr := QueryPlatformsResult{}
+
+	return &qpr, []any{&qpr.PlatId, &qpr.Name}
+}
+
 func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hus ...entity.HashUser) ([]QueryLeaksResult, error) {
 	ctx := database.Convert[database.Record, QueryLeaksResult](dbctx)
 
@@ -46,6 +54,12 @@ func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hu
 	return queryLeaks(ctx, tt)
 }
 
+func QueryPlaformsDB(dbctx database.DatabaseContext[database.Record], tt Target) ([]QueryPlatformsResult, error) {
+	ctx := database.Convert[database.Record, QueryPlatformsResult](dbctx)
+
+	return queryPlatforms(ctx, tt)
+}
+
 func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], hus []entity.HashUser) ([]QueryLeaksResult, error) {
 	q, m, vs := prepareAffectedUserQuery(hus)
 
@@ -54,6 +68,12 @@ func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], 
 
 func queryLeaks(dbctx database.DatabaseContext[QueryLeaksResult], tt Target) ([]QueryLeaksResult, error) {
 	q, m, vs := prepareLeaksQuery(tt)
+
+	return dbctx.CustomQuery(q, m, vs...)
+}
+
+func queryPlatforms(dbctx database.DatabaseContext[QueryPlatformsResult], tt Target) ([]QueryPlatformsResult, error) {
+	q, m, vs := preparePlatformsQuery(tt)
 
 	return dbctx.CustomQuery(q, m, vs...)
 }
@@ -72,4 +92,8 @@ func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQuer
 
 func prepareLeaksQuery(tt Target) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
 	return fmt.Sprintf(leaksQuery, tt.ToSQLKeyword()), leaksQueryMapper, []any{}
+}
+
+func preparePlatformsQuery(tt Target) (string, database.TypedQueryResultMapper[QueryPlatformsResult], []any) {
+	return platformsQuery, platformsQueryMapper, []any{}
 }
