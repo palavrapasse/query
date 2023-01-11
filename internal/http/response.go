@@ -10,6 +10,7 @@ import (
 // Tooled with json-go-struct mapper: https://mholt.github.io/json-to-go/
 
 type QueryLeaksView []QueryLeaksResultView
+type QueryPlatformsView []QueryPlatformsResultView
 
 type LeakView struct {
 	Context          string `json:"context"`
@@ -25,6 +26,8 @@ type QueryLeaksResultView struct {
 	LeakView
 }
 
+type QueryPlatformsResultView string
+
 func ToQueryLeaksView(auls []data.QueryLeaksResult) QueryLeaksView {
 	lls := len(auls)
 	qlv := make(QueryLeaksView, lls)
@@ -34,6 +37,17 @@ func ToQueryLeaksView(auls []data.QueryLeaksResult) QueryLeaksView {
 	}
 
 	return qlv
+}
+
+func ToQueryPlatformsView(qprs []data.QueryPlatformsResult) QueryPlatformsView {
+	lps := len(qprs)
+	qpv := make(QueryPlatformsView, lps)
+
+	for i := 0; i < lps; i++ {
+		qpv[i] = ToQueryPlatformsResultView(qprs[i])
+	}
+
+	return qpv
 }
 
 func ToQueryLeaksResultView(aul data.QueryLeaksResult) QueryLeaksResultView {
@@ -46,6 +60,10 @@ func ToQueryLeaksResultView(aul data.QueryLeaksResult) QueryLeaksResultView {
 			Email: string(aul.Email),
 		},
 	}
+}
+
+func ToQueryPlatformsResultView(qpr data.QueryPlatformsResult) QueryPlatformsResultView {
+	return QueryPlatformsResultView(qpr.Name)
 }
 
 func NoContent(ectx echo.Context) error {
