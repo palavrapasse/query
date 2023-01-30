@@ -74,16 +74,14 @@ func ParseAffected(s string) []string {
 }
 
 func AffectedToHashUser(aff []string) []query.HashUser {
-	laff := len(aff)
-	hus := make([]query.HashUser, laff)
+	var hus []query.HashUser
 
-	for i := 0; i < laff; i++ {
-		e, err := query.NewEmail(aff[i])
+	for _, ae := range aff {
+		e, err := query.NewEmail(ae)
 
 		if err == nil {
-			hus[i] = query.NewHashUser(query.NewUser(e))
+			hus = append(hus, query.NewHashUser(query.NewUser(e)))
 		}
-
 	}
 
 	return hus
