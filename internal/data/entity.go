@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/palavrapasse/damn/pkg/database"
-	"github.com/palavrapasse/damn/pkg/entity"
+	"github.com/palavrapasse/damn/pkg/entity/query"
 )
 
 const affectedSeparator = ","
@@ -25,12 +25,12 @@ type LeakType string
 type Target string
 
 type QueryLeaksResult struct {
-	entity.User
-	entity.Leak
+	query.User
+	query.Leak
 }
 
 type QueryPlatformsResult struct {
-	entity.Platform
+	query.Platform
 }
 
 func ParseLeakType(s string) LeakType {
@@ -73,12 +73,12 @@ func ParseAffected(s string) []string {
 	return aff
 }
 
-func AffectedToHashUser(aff []string) []entity.HashUser {
+func AffectedToHashUser(aff []string) []query.HashUser {
 	laff := len(aff)
-	hus := make([]entity.HashUser, laff)
+	hus := make([]query.HashUser, laff)
 
 	for i := 0; i < laff; i++ {
-		hus[i] = entity.NewHashUser(entity.User{Email: entity.Email(aff[i])})
+		hus[i] = query.NewHashUser(query.User{Email: query.Email(aff[i])})
 	}
 
 	return hus

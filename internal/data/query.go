@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/palavrapasse/damn/pkg/database"
-	"github.com/palavrapasse/damn/pkg/entity"
+	"github.com/palavrapasse/damn/pkg/entity/query"
 )
 
 const leaksByUserHashPreparedQuery = `
@@ -51,7 +51,7 @@ var platformsQueryMapper = func() (*QueryPlatformsResult, []any) {
 	return &qpr, []any{&qpr.Name}
 }
 
-func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hus ...entity.HashUser) ([]QueryLeaksResult, error) {
+func QueryLeaksDB(dbctx database.DatabaseContext[database.Record], tt Target, hus ...query.HashUser) ([]QueryLeaksResult, error) {
 	ctx := database.Convert[database.Record, QueryLeaksResult](dbctx)
 
 	if len(hus) > 0 {
@@ -71,7 +71,7 @@ func QueryPlaformsDB(dbctx database.DatabaseContext[database.Record], tt Target)
 	return queryPlatformsByLeaks(ctx, tt)
 }
 
-func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], hus []entity.HashUser) ([]QueryLeaksResult, error) {
+func queryLeaksThatAffectUser(dbctx database.DatabaseContext[QueryLeaksResult], hus []query.HashUser) ([]QueryLeaksResult, error) {
 	q, m, vs := prepareAffectedUserQuery(hus)
 
 	return dbctx.CustomQuery(q, m, vs...)
@@ -95,7 +95,7 @@ func queryPlatformsByLeaks(dbctx database.DatabaseContext[QueryPlatformsResult],
 	return dbctx.CustomQuery(q, m, vs...)
 }
 
-func prepareAffectedUserQuery(hus []entity.HashUser) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
+func prepareAffectedUserQuery(hus []query.HashUser) (string, database.TypedQueryResultMapper[QueryLeaksResult], []any) {
 	lhus := len(hus)
 
 	values := make([]any, lhus)
