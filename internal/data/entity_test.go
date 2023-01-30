@@ -3,7 +3,10 @@ package data
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
+
+	"github.com/palavrapasse/damn/pkg/entity/query"
 )
 
 func TestParseLeakTypeReturnsEmailLeakTypeIfStringMatchesEmail(t *testing.T) {
@@ -149,5 +152,31 @@ func TestParseAffectedReturnsEmptySliceIfAffectedContainsSpacesAndSeparators(t *
 
 	if !reflect.DeepEqual(aff, eaff) {
 		t.Fatalf("function should have returned (%v: len=%d), but got: (%v: len=%d)", eaff, len(eaff), aff, len(aff))
+	}
+}
+
+func TestAffectedToHashUserIgnoresInvalidEmails(t *testing.T) {
+	validEmail := "abc@email.com"
+	invalidEmail := "abcemail.com"
+	aff := []string{validEmail, invalidEmail}
+
+	hus := AffectedToHashUser(aff)
+	ehus := []query.HashUser{query.NewHashUser(query.User{Email: query.Email(validEmail)})}
+
+	if !reflect.DeepEqual(hus, ehus) {
+		t.Fatalf("function should have returned (%v: len=%d), but got: (%v: len=%d)", ehus, len(ehus), hus, len(hus))
+	}
+}
+
+func TestAffectedToHashUserReturnsLowercaseEmailHash(t *testing.T) {
+	email := "aBC@email.com"
+	lowerEmail := strings.ToLower(email)
+	aff := []string{email}
+
+	hus := AffectedToHashUser(aff)
+	ehus := []query.HashUser{query.NewHashUser(query.User{Email: query.Email(lowerEmail)})}
+
+	if !reflect.DeepEqual(hus, ehus) {
+		t.Fatalf("function should have returned (%v: len=%d), but got: (%v: len=%d)", ehus, len(ehus), hus, len(hus))
 	}
 }

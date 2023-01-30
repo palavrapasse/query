@@ -6,7 +6,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/palavrapasse/aspirador v0.0.1
-	github.com/palavrapasse/damn v0.0.4
+	github.com/palavrapasse/damn v0.0.9
 )
 
 require (
