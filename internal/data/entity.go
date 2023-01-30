@@ -78,7 +78,12 @@ func AffectedToHashUser(aff []string) []query.HashUser {
 	hus := make([]query.HashUser, laff)
 
 	for i := 0; i < laff; i++ {
-		hus[i] = query.NewHashUser(query.User{Email: query.Email(aff[i])})
+		e, err := query.NewEmail(aff[i])
+
+		if err == nil {
+			hus[i] = query.NewHashUser(query.NewUser(e))
+		}
+
 	}
 
 	return hus
