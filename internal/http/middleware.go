@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/palavrapasse/damn/pkg/database"
 	"github.com/palavrapasse/query/internal/logging"
 )
@@ -21,7 +20,6 @@ type MiddlewareContext struct {
 func RegisterMiddlewares(e *echo.Echo, dbctx database.DatabaseContext[database.Record]) {
 	e.Use(dbAccessMiddleware(dbctx))
 	e.Use(loggingMiddleware())
-	e.Use(middleware.CORS())
 }
 
 func GetMiddlewareContext(ectx echo.Context) (MiddlewareContext, error) {
