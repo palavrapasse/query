@@ -42,5 +42,11 @@ To run the service container:
 local_port=8080
 container_port=8080
 
-docker run -p $local_port:$container_port -t $docker_tag
+host_leaksdb_fp="leaksdb.sqlite"
+container_leaksdb_fp="leaksdb.sqlite"
+
+docker run \
+    -p $local_port:$container_port \
+    --mount "type=bind,src=$host_leaksdb_fp,dst=$container_leaksdb_fp" \
+    -t $docker_tag
 ```
