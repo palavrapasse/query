@@ -6,6 +6,7 @@ RUN --mount=type=secret,id=env cp /run/secrets/env ./.env
 
 # todo: remove this after repositories are public (+ git-credentials)
 RUN apk add git
+RUN apk add gcc g++
 RUN git config --global credential.helper store
 
 COPY go.mod ./
@@ -16,9 +17,11 @@ RUN go mod download
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 
-RUN GOOS=linux CGO_ENABLED=0 go build -o /query ./cmd/query/query.go
+RUN GOOS=linux CGO_ENABLED=1 go build -ldflags="-extldflags=-static" -o query ./cmd/query/query.go
 
 FROM scratch
-COPY --from=builder /query /query
+WORKDIR /app
 
-CMD [ "/query" ]
+COPY --from=builder /app /app/
+
+CMD [ "/app/query" ]
