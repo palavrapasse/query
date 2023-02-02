@@ -22,7 +22,7 @@ go run cmd/query/query.go
 
 ## Docker
 
-You can also run this service with Docker, but you will also need to setup the `.env` file and `.git-local-credentials`. The credentials file shall contain the git credentials config to access `damn` and `palavrapasse` private modules.
+To run the service with Docker, you will first need to setup the `.git-local-credentials` file. This credentials file shall contain the git credentials config to access `damn` and `palavrapasse` private modules.
 
 To build the service image:
 
@@ -32,21 +32,17 @@ docker_tag=query:latest
 docker build \
     -f ./deployments/Dockerfile \
     --secret id=git-credentials,src=.local-git-credentials \
-    --secret id=env,src=.env \
     . -t $docker_tag
 ```
 
 To run the service container:
 
 ```bash
-local_port=8080
-container_port=8080
-
-host_leaksdb_fp="leaksdb.sqlite"
-container_leaksdb_fp="leaksdb.sqlite"
+export $(grep -v '^#' .env | xargs)
 
 docker run \
-    -p $local_port:$container_port \
-    --mount "type=bind,src=$host_leaksdb_fp,dst=$container_leaksdb_fp" \
+    -p $server_port:$server_port \
+    --mount "type=bind,src=$leaksdb_fp,dst=$leaksdb_fp" \
+    --env-file .env \
     -t $docker_tag
 ```
