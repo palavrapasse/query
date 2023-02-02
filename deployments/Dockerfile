@@ -2,7 +2,6 @@ FROM golang:1.19.3-alpine AS builder
 WORKDIR /app
 
 RUN --mount=type=secret,id=git-credentials cp /run/secrets/git-credentials ~/.git-credentials
-RUN --mount=type=secret,id=env cp /run/secrets/env ./.env
 
 # todo: remove this after repositories are public (+ git-credentials)
 RUN apk add git
