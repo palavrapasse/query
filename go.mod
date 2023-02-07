@@ -7,7 +7,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/palavrapasse/aspirador v0.0.1
 	github.com/palavrapasse/damn v0.0.9
-	github.com/shirou/gopsutil v3.21.11+incompatible
+	github.com/palavrapasse/paramedic v0.0.1
 )
 
 require (
@@ -16,7 +16,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
-	github.com/palavrapasse/paramedic v0.0.1 // indirect
+	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tklauser/go-sysconf v0.3.11 // indirect
 	github.com/tklauser/numcpus v0.6.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
