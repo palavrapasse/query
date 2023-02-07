@@ -90,7 +90,7 @@ func QueryHealthCheck(ectx echo.Context) error {
 
 	logging.Aspirador.Trace(fmt.Sprintf("%v", result))
 
-	return Ok(ectx, result)
+	return Ok(ectx, ToHealthStatusView(result))
 }
 
 func useNotFoundHandler() func(c echo.Context) error {

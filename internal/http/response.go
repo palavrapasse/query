@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/palavrapasse/paramedic/pkg"
 	"github.com/palavrapasse/query/internal/data"
 )
 
@@ -72,6 +73,16 @@ func ToQueryLeaksResultView(aul data.QueryLeaksResult) QueryLeaksResultView {
 
 func ToQueryPlatformsResultView(qpr data.QueryPlatformsResult) QueryPlatformsResultView {
 	return QueryPlatformsResultView(qpr.Name)
+}
+
+func ToHealthStatusView(hs pkg.HealthStatus) HealthStatusView {
+	return HealthStatusView{
+		CPU:           hs.CPU,
+		CPUPercentage: hs.CPUPercentage,
+		RAM:           hs.RAM,
+		RAMMax:        hs.RAMMax,
+		RAMPercentage: hs.RAMPercentage,
+	}
 }
 
 func NoContent(ectx echo.Context) error {
