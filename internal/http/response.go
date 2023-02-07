@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/palavrapasse/paramedic/pkg"
 	"github.com/palavrapasse/query/internal/data"
 )
 
@@ -28,14 +27,6 @@ type QueryLeaksResultView struct {
 }
 
 type QueryPlatformsResultView string
-
-type HealthStatusView struct {
-	CPU           float64 `json:"cpu"`
-	CPUPercentage float64 `json:"cpuPercentage"`
-	RAM           float64 `json:"ram"`
-	RAMPercentage float64 `json:"ramPercentage"`
-	RAMMax        float64 `json:"ramMax"`
-}
 
 func ToQueryLeaksView(auls []data.QueryLeaksResult) QueryLeaksView {
 	lls := len(auls)
@@ -73,16 +64,6 @@ func ToQueryLeaksResultView(aul data.QueryLeaksResult) QueryLeaksResultView {
 
 func ToQueryPlatformsResultView(qpr data.QueryPlatformsResult) QueryPlatformsResultView {
 	return QueryPlatformsResultView(qpr.Name)
-}
-
-func ToHealthStatusView(hs pkg.HealthStatus) HealthStatusView {
-	return HealthStatusView{
-		CPU:           hs.CPU,
-		CPUPercentage: hs.CPUPercentage,
-		RAM:           hs.RAM,
-		RAMMax:        hs.RAMMax,
-		RAMPercentage: hs.RAMPercentage,
-	}
 }
 
 func NoContent(ectx echo.Context) error {
