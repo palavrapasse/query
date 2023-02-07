@@ -21,6 +21,8 @@ github.com/palavrapasse/aspirador v0.0.1 h1:PqdnHweSXfvYITOgOQC0JAXD3GeYV2x+rc4S
 github.com/palavrapasse/aspirador v0.0.1/go.mod h1:1LJFZgJoNr7In+g3PQHWwK6/Dha9jsiTT2jMV/eiAX8=
 github.com/palavrapasse/damn v0.0.9 h1:xqORTlSn/j/CZgmrfl9NMWhh5SqXDCQ3kQ/nY1IhWaE=
 github.com/palavrapasse/damn v0.0.9/go.mod h1:7Yj+B7xykwnKufipuZq2z8daMuqhdd7USWe/cloc5NU=
+github.com/palavrapasse/paramedic v0.0.1 h1:kS/3gq4ajqnJueeste9jKcfycMGhdbldzZAGlXhE9/E=
+github.com/palavrapasse/paramedic v0.0.1/go.mod h1:K66P+Y29y+2j8/DS8LWTx/PmUytiZhIURN1U0r+Ji5o=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/shirou/gopsutil v3.21.11+incompatible h1:+1+c1VGhc88SSonWP6foOcLhvnKlUeu/erjjvaPEYiI=
@@ -51,6 +53,8 @@ golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.2.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.3.0 h1:w8ZOecv6NaNa/zC8944JTU3vz4u6Lagfk4RPQxv92NQ=
 golang.org/x/sys v0.3.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.5.0 h1:MUK/U/4lj1t1oPg0HfuXDN/Z1wv31ZJ/YcPiGccS4DU=
+golang.org/x/sys v0.5.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/text v0.5.0 h1:OLmvp0KP+FVG99Ct/qFiL/Fhk4zp4QQnZ7b2U+5piUM=
 golang.org/x/text v0.5.0/go.mod h1:mrYo+phRRbMaCq/xk9113O4dZlRixOauAjOtrjsXDZ8=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
