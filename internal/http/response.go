@@ -28,13 +28,6 @@ type QueryLeaksResultView struct {
 
 type QueryPlatformsResultView string
 
-type HealthStatusView struct {
-	CPU           float64 `json:"cpu"`
-	CPUPercentage float64 `json:"cpuPercentage"`
-	RAM           float64 `json:"ram"`
-	RAMPercentage float64 `json:"ramPercentage"`
-	RAMMax        float64 `json:"ramMax"`
-}
 
 func ToQueryLeaksView(auls []data.QueryLeaksResult) QueryLeaksView {
 	lls := len(auls)
