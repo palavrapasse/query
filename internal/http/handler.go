@@ -2,15 +2,12 @@ package http
 
 import (
 	"fmt"
-	"math"
 	"net/http"
-	"runtime"
 
 	"github.com/labstack/echo/v4"
+	"github.com/palavrapasse/paramedic/pkg"
 	"github.com/palavrapasse/query/internal/data"
 	"github.com/palavrapasse/query/internal/logging"
-	"github.com/shirou/gopsutil/cpu"
-	"github.com/shirou/gopsutil/mem"
 )
 
 func RegisterHandlers(e *echo.Echo) {
@@ -85,30 +82,12 @@ func QueryPlatforms(ectx echo.Context) error {
 
 func QueryHealthCheck(ectx echo.Context) error {
 
-	vmStat, err := mem.VirtualMemory()
+	result, err := pkg.CheckHealth()
+
 	if err != nil {
 		return InternalServerError(ectx)
 	}
 
-	cpuPercentages, err := cpu.Percent(0, false)
-	if err != nil {
-		return InternalServerError(ectx)
-	}
-
-	cpu := runtime.NumCPU()
-	cpuPercentage := math.Round(cpuPercentages[0]*100) / 100
-
-	ram := vmStat.Total
-	ramMax := ram + vmStat.Free
-	ramPercentage := math.Round(vmStat.UsedPercent*100) / 100
-
-	result := HealthStatusView{
-		CPU:           float64(cpu),
-		CPUPercentage: float64(cpuPercentage),
-		RAM:           float64(ram),
-		RAMMax:        float64(ramMax),
-		RAMPercentage: float64(ramPercentage),
-	}
 	logging.Aspirador.Trace(fmt.Sprintf("%v", result))
 
 	return Ok(ectx, result)
