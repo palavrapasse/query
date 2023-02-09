@@ -38,7 +38,9 @@ func QueryLeaks(ectx echo.Context) error {
 	tt := data.ParseTarget(ttp)
 	hus := data.AffectedToHashUser(aff)
 
-	affu, err = data.QueryLeaksDB(mwctx.DB, tt, hus...)
+	if !(len(hus) == 0 && len(aff) != 0) {
+		affu, err = data.QueryLeaksDB(mwctx.DB, tt, hus...)
+	}
 
 	if err != nil {
 		logging.Aspirador.Error(fmt.Sprintf("Error while querying Leaks from DB: %s", err))
