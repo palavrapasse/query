@@ -31,8 +31,8 @@ func CreateAspiradorClients() []as.Client {
 	fileClient, err := as.NewFileClient(loggingFilePath)
 
 	if err != nil {
-		return []as.Client{consoleClient, telegramClient, fileClient}
+		return []as.Client{consoleClient, telegramClient}
 	}
 
-	return []as.Client{consoleClient, telegramClient}
+	return []as.Client{consoleClient, telegramClient, fileClient}
 }
